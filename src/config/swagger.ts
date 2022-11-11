@@ -1,6 +1,8 @@
 import swaggerAutogen from "swagger-autogen"
-import endpointsFiles from "@/routes/index"
-import outputFile from "./swagger_output.json"
+
+const outputFile = "./swagger_output.json"
+
+const endpointsFiles = ["./src/routes/index.ts"]
 
 const doc = {
   info: {
@@ -12,8 +14,8 @@ const doc = {
       email: "pedro.lucas.clear@gmail.com",
     },
   },
-  host: "ajuda-ja-api.vercel.app/api",
-  schemes: ["https"],
+  host: "localhost:3333/v1",
+  schemes: ["http"],
   consumes: ["application/json"],
   securytiDefinitions: {
     bearerAuth: {
@@ -24,4 +26,4 @@ const doc = {
   },
 }
 
-swaggerAutogen()(outputFile, endpointsFiles, doc)
+swaggerAutogen(outputFile, endpointsFiles, doc)

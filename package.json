@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && tsc-alias",
-    "swagger-autogen": "node ./dist/src/config/swagger.js",
+    "swagger-autogen": "ts-node src/config/swagger.ts",
     "start": "node dist/index.js",
     "start:dev": "nodemon --watch src/ --exec ts-node -r tsconfig-paths/register src/index.ts -e ts",
     "husky:prepare": "husky install",

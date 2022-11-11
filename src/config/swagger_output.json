@@ -1,12 +1,36 @@
 {
-  "openapi": "3.0.0",
+  "swagger": "2.0",
   "info": {
-    "title": "APi desenvolvida para o PIM",
-    "description": "EndPoint de todas as Rotas e /api a partir dessa voce acessa todas as outras rotas!",
+    "title": "AjudaJA API",
     "version": "1.0.0",
+    "description": "API do projeto AjudaJA",
     "contact": {
       "name": "Pedro Lucas",
-      "email": "pedrolucas1014@hotmail.com"
+      "email": "pedro.lucas.clear@gmail.com"
+    }
+  },
+  "host": "localhost:3333/v1",
+  "basePath": "/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "paths": {
+    "/teste": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "securytiDefinitions": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
     }
   }
 }

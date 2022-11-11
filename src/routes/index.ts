@@ -7,7 +7,9 @@ const router = express.Router()
 // const clientController = new ClientController()
 
 // Recovery password quando esqueceu
-// router.post("/private/recovery", clientController.get)
+router.get("/teste", (req, res) => {
+  res.send("Hello World")
+})
 
 // Gerar o token para o password quando esqueceu
 router.post("/public/recovery")
