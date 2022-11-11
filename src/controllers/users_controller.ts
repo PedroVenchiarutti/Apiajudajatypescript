@@ -54,3 +54,55 @@
 //       .catch((err: any) => console.log(err))
 //   })
 // }
+import { NextFunction } from "express"
+import Users from "@/models/users"
+import { Request, Response } from "express"
+
+interface User extends Request {
+  body: {
+    username: string
+    email: string
+    password: string
+    name: string
+    lastname: string
+    gender: string
+    birthday: string
+    emergencynumber: string
+    helth_insurance: string
+    avatar?: string
+  }
+}
+
+export class UsersController {
+  get(req: Request, res: Response) {
+    // const getAll = await Users.query()
+
+    console.log(req, res)
+    console.log(getAll)
+
+    // res.status(200).json(getAll)
+  }
+
+  async add(req: User, res: Response, next: NextFunction) {
+    const {
+      birthday,
+      emergencynumber,
+      helth_insurance,
+      gender,
+      name,
+      lastname,
+      avatar,
+      email,
+      password,
+      username,
+    } = req.body
+
+    // const inserts = await Users.query().insert({
+    //   email,
+    //   password,
+    //   username,
+    // })
+
+    // res.status(201).json(inserts)
+  }
+}

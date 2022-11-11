@@ -1,5 +1,5 @@
-const { Model } = require("objection")
-import knex from "@/config/connection"
+import { Model } from "objection"
+import knex from "@/database/connection"
 
 Model.knex(knex)
 
