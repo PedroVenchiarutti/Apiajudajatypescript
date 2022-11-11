@@ -5,7 +5,6 @@ import "dotenv/config"
 import routes from "@/routes"
 import { Request, NextFunction, Response } from "express"
 import { errorMiddlewares } from "@/middlewares/error"
-import Client from "@/models/clients"
 
 const server = express()
 
@@ -16,12 +15,6 @@ server.use(express.urlencoded({ extended: false }))
 
 //EndPoints
 server.use("/v1", routes)
-
-server.get("/", (req, res) => {
-  Client.query().then((result: Array<string>) => {
-    res.json(result)
-  })
-})
 
 // Middlewware de erro sempre usar por ultimo de tudo
 server.use(errorMiddlewares)

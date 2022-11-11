@@ -1,7 +1,7 @@
 const { Model } = require("objection")
-import knexfile from "@/../knexfile"
+import knex from "@/config/connection"
 
-Model.knex(knexfile)
+Model.knex(knex)
 
 class Client extends Model {
   static get tableName() {
