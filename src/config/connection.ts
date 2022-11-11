@@ -1,4 +1,4 @@
-import knexfile from "../../knexfile"
+import knexfile from "@/knexfile"
 
 const knex = require("knex")(knexfile)
 

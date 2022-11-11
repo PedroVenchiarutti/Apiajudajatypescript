@@ -1,14 +1,13 @@
 import * as express from "express"
 import routerPrivate from "@/routes/private"
 import routerPublic from "@/routes/public"
-import ClientController from "@/controllers/client_controller"
-import { ApiError } from "@/helpers/api_errors"
+// import ClientController from "@/controllers/client_controller"
 
 const router = express.Router()
-const clientController = new ClientController()
+// const clientController = new ClientController()
 
 // Recovery password quando esqueceu
-router.post("/private/recovery", clientController.get)
+// router.post("/private/recovery", clientController.get)
 
 // Gerar o token para o password quando esqueceu
 router.post("/public/recovery")
