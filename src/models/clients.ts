@@ -9,7 +9,7 @@ class Client extends Model {
   }
 
   // to make relation with other tables
-  //static get relationMappings() {}
+  // static get relationMappings() {}
 }
 
 export default Client

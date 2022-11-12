@@ -37,3 +37,15 @@
 - caso o husky buga voce pode reinstalar ele usando yarn husky:prepare e depois criando o pre-commit npx husky add .husky/pre-commit "yarn lint-staged"
 
 - Caso o conventional commit nao esteja funcionando tbm pode reinstalar usando npx husky add .husky/commit-msg ".git/hooks/commit-msg \$1" verifica se ficou uma aspa dentro do arquivo .husky pre-commit e remova
+
+# Migrations
+
+- Historico do banco server como uma timeline, para criar tabelas no banco ela nao apaga as que ja existe
+
+# Seeds
+
+- Seeds serve para popular o banco com informacoes
+
+# Model
+
+- Sao as tabelas do banco de dados seria mesma coisa que repositories

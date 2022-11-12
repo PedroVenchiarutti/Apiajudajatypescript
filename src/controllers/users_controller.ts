@@ -74,13 +74,16 @@ interface User extends Request {
 }
 
 export class UsersController {
-  get(req: Request, res: Response) {
-    // const getAll = await Users.query()
+  async get(req: User, res: Response): Promise<void> {
+    const getAll = await Users.query()
+      .withGraphFetched("users_informations")
+      .modifyGraph("users_informations", (builder) => {
+        builder.where("user_id", 272)
+      })
 
-    console.log(req, res)
-    console.log(getAll)
+    // console.log(getAll)
 
-    // res.status(200).json(getAll)
+    res.status(200).json(getAll)
   }
 
   async add(req: User, res: Response, next: NextFunction) {
