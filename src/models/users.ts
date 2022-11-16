@@ -4,6 +4,16 @@ import Client from "@/models/clients"
 
 Model.knex(knex)
 
+interface User extends Model {
+  id: number
+  username: string
+  email: string
+  password: string
+  created_at: Date
+  updated_at: Date
+  users_informations: Client
+}
+
 class User extends Model {
   static get tableName() {
     return "users"

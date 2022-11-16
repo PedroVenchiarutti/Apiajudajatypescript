@@ -1,10 +1,17 @@
 import * as express from "express"
+import { UsersController } from "@/controllers/users_controller"
 
 const routerPublic = express.Router()
 
+const usersController = new UsersController()
+
 routerPublic.post("/login")
 
-routerPublic.post("/register")
+// Rota para cadastro de usuario
+routerPublic.post("/register", usersController.create)
+
+// Gerar o token para o password quando esqueceu
+routerPublic.post("/recovery")
 
 // Rotas para adicionar o a alergia no banco de dados
 routerPublic.post("/client/allergy/add")

@@ -1,11 +1,12 @@
 import { ApiError } from "@/helpers/api_errors"
-import { Request, Response } from "express"
+import { Request, Response, NextFunction } from "express"
 // Para o middleware funcionar com funcao async e necessario instalar um lib express-async-errors
 
-export const errorMiddlewares = (
+export const errorMiddleware = (
   error: Error & Partial<ApiError>,
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   const statusCode = error.statusCode ?? 500
   const message = error.statusCode ? error.message : "Internal Server Error"
