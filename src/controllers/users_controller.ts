@@ -161,4 +161,21 @@ export class UsersController {
 
     res.status(201).json(client)
   }
+
+  // PUT - update
+  async update(req: Request, res: Response): Promise<void> {
+    const bcrypt = new BcryptService()
+
+    const { id } = req.params
+
+    const { password } = req.body
+
+    const hash = await bcrypt.hash(password)
+
+    const user = await Users.query().updateAndFetchById(id, {
+      password: hash,
+    })
+
+    res.status(200).json(user)
+  }
 }

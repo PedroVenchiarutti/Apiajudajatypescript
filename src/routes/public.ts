@@ -1,5 +1,7 @@
 import * as express from "express"
 import { UsersController } from "@/controllers/users_controller"
+import { userSchema } from "@/schemas/userValidations"
+import bodyValidation from "@/middlewares/validation"
 
 const routerPublic = express.Router()
 
@@ -8,7 +10,11 @@ const usersController = new UsersController()
 routerPublic.post("/login")
 
 // Rota para cadastro de usuario
-routerPublic.post("/register", usersController.create)
+routerPublic.post(
+  "/register",
+  bodyValidation(userSchema),
+  usersController.create
+)
 
 // Gerar o token para o password quando esqueceu
 routerPublic.post("/recovery")

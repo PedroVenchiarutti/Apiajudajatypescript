@@ -9,8 +9,6 @@ const router = express.Router()
 // Recovery password quando esqueceu
 router.post("/recovery/password")
 
-
-
 router.post("/public/refresh-token")
 
 // Cadastro de msg IA
