@@ -65,6 +65,10 @@ export class UsersController {
   async get(req: Request, res: Response): Promise<void> {
     const getAll = await Users.query().select("*")
 
+    /**
+     * #swagger.tags = ['Users']
+     */
+
     const filter = getAll.map((user) => {
       return {
         id: user.id,
@@ -140,14 +144,26 @@ export class UsersController {
 
     const hash = await crpyt.hash(password)
 
+    // Verifica se o email ja existe no banco de dados
+    const emailExists = await Users.query().where("email", email).first()
+
+    if (emailExists) {
+      throw new BadRequestError("Email já cadastrado")
+    }
+
+    // Criando o usuario
     const user = await Users.query().insert({
       username,
       email,
       password: hash,
     })
 
+    // Pegando o id do usuario criado
+    const user_id = user.id
+
+    // Insere os dados do client no banco de dados e vincula com o user caso o user seja criado
     const client = await Users.relatedQuery("users_informations")
-      .for(user.id)
+      .for(user_id)
       .insert({
         name,
         lastname,
@@ -158,6 +174,9 @@ export class UsersController {
         avatar,
       })
       .returning("*")
+      .catch(async (err: any) => {
+        await Users.query().deleteById(user_id)
+      })
 
     res.status(201).json(client)
   }
@@ -177,5 +196,17 @@ export class UsersController {
     })
 
     res.status(200).json(user)
+  }
+
+  // DELETE - destroy - Deleta o usuario e o client
+  async delete(req: Request, res: Response): Promise<void> {
+    const { id } = req.params
+
+    console.log("id")
+
+    const user = await Users.query()
+    console.log(user)
+
+    // res.status(200).json(user)
   }
 }

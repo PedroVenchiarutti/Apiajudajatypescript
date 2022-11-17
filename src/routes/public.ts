@@ -1,6 +1,6 @@
 import * as express from "express"
 import { UsersController } from "@/controllers/users_controller"
-import { userSchema } from "@/schemas/userValidations"
+import { userSchema } from "@/schemas/users_validations"
 import bodyValidation from "@/middlewares/validation"
 
 const routerPublic = express.Router()

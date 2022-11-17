@@ -10,7 +10,8 @@ routerPrivate.get("/users", usersController.get)
 routerPrivate.get("/users/:id", usersController.getById)
 routerPrivate.put("/update/users/:id")
 routerPrivate.patch("/update/users/password/:id")
-routerPrivate.delete("/delete/users/:id")
+
+routerPrivate.delete("/delete/users/:id", usersController.delete)
 
 // ROTAS DE  CLIENTES
 routerPrivate.get("/client/:id", usersController.getByForeignKey)

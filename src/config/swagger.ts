@@ -2,7 +2,16 @@ import swaggerAutogen from "swagger-autogen"
 
 const outputFile = "./swagger_output.json"
 
-const endpointsFiles = ["./src/routes/index.ts"]
+const endpointsFiles = [
+  "./src/routes/index.ts",
+  "./src/routes/private.ts",
+  "./src/routes/public.ts",
+  "./src/controllers/users_controller.ts",
+]
+
+const options = {
+  openapi: "3.0.0",
+}
 
 const doc = {
   info: {
@@ -26,4 +35,6 @@ const doc = {
   },
 }
 
-swaggerAutogen(outputFile, endpointsFiles, doc)
+swaggerAutogen(options)(outputFile, endpointsFiles, doc).then(async () => {
+  await "./src/config/server"
+})

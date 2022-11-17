@@ -4,11 +4,10 @@ import { Request, Response, NextFunction } from "express"
 const bodyValidation =
   (schema: any) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const validation = await schema.safeParse(req.body)
-      console.log(validation)
+      await schema.parse(req.body)
       next()
     } catch (err: any) {
-      next(new BadRequestError(err))
+      next(new BadRequestError(err.errors[0].message))
     }
   }
 
