@@ -35,6 +35,4 @@ const doc = {
   },
 }
 
-swaggerAutogen(options)(outputFile, endpointsFiles, doc).then(async () => {
-  await "./src/config/server"
-})
+swaggerAutogen(options)(outputFile, endpointsFiles, doc)

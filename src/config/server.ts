@@ -16,7 +16,7 @@ server.use(express.urlencoded({ extended: false }))
 
 //EndPoints
 server.use("/v1", routes)
-server.use("/v1/api-docs", swaggerUi.serve)
+server.use("/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // Middlewware de erro sempre usar por ultimo de tudo
 server.use(errorMiddleware)

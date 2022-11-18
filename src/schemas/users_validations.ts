@@ -6,7 +6,7 @@ const phoneRegExp =
 
 export const userSchema = z
   .object({
-    name: z
+    username: z
       .string({
         required_error: "Name is required",
       })
@@ -27,9 +27,13 @@ export const userSchema = z
       .max(50),
     birthday: z
       .string({
-        required_error: "O campo data de nascimento é obrigatório",
+        required_error: "O campo data de nascimento é obrigatorio",
       })
-      .max(10, "Data de nascimento precisa ser valida"),
+      .min(8)
+      .max(8),
+    name: z.string({
+      required_error: "Seu nome e obrigatorio",
+    }),
     emergencynumber: z
       .string()
       .min(10)

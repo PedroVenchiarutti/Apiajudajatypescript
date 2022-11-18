@@ -56,18 +56,16 @@
 // }
 import { NextFunction } from "express"
 import Users from "@/models/users"
+import Client from "@/models/clients"
 import { Request, Response } from "express"
 import { BcryptService } from "@/services/bcrypt"
 import { BadRequestError } from "@/helpers/api_errors"
+import { IUsers_controller } from "@/entities/users_controller"
 
-export class UsersController {
+export class UsersController implements IUsers_controller {
   // GET - All
-  async get(req: Request, res: Response): Promise<void> {
+  async get(req: Request, res: Response): Promise<Response> {
     const getAll = await Users.query().select("*")
-
-    /**
-     * #swagger.tags = ['Users']
-     */
 
     const filter = getAll.map((user) => {
       return {
@@ -79,11 +77,11 @@ export class UsersController {
       }
     })
 
-    res.status(200).json(filter)
+    return res.status(200).json(filter)
   }
 
   // GET BY ID - show
-  async getById(req: Request, res: Response): Promise<void> {
+  async getById(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
 
     const getById = await Users.query().findById(id)
@@ -93,7 +91,7 @@ export class UsersController {
       throw new BadRequestError("Usuário não encontrado")
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       id: getById.id,
       username: getById.username,
       email: getById.email,
@@ -103,7 +101,7 @@ export class UsersController {
   }
 
   // GET BY FOREIGN KEY - show Trazendo o Dados do client que esta vinculado com o user por chave estrangeira
-  async getByForeignKey(req: Request, res: Response): Promise<void> {
+  async getByForeignKey(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
 
     const getByForeignKey = await Users.query()
@@ -115,7 +113,7 @@ export class UsersController {
       throw new BadRequestError("Usuário não encontrado")
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       id: getByForeignKey.id,
       username: getByForeignKey.username,
       email: getByForeignKey.email,
@@ -126,7 +124,7 @@ export class UsersController {
   }
 
   // POST - create
-  async create(req: Request, res: Response): Promise<void> {
+  async create(req: Request, res: Response): Promise<Response> {
     const crpyt = new BcryptService()
 
     const {
@@ -174,15 +172,25 @@ export class UsersController {
         avatar,
       })
       .returning("*")
-      .catch(async (err: any) => {
+      .catch(async (err) => {
+        // Caso ocorra algum erro ao criar o client, o usuario criado é deletado
         await Users.query().deleteById(user_id)
+        console.log(err)
+        throw new BadRequestError("Erro ao criar o usuário ")
       })
 
-    res.status(201).json(client)
+    return res.status(201).json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+      users_informations: client,
+    })
   }
 
   // PUT - update
-  async update(req: Request, res: Response): Promise<void> {
+  async update(req: Request, res: Response): Promise<Response> {
     const bcrypt = new BcryptService()
 
     const { id } = req.params
@@ -195,18 +203,21 @@ export class UsersController {
       password: hash,
     })
 
-    res.status(200).json(user)
+    return res.status(200).json(user)
   }
 
   // DELETE - destroy - Deleta o usuario e o client
-  async delete(req: Request, res: Response): Promise<void> {
+  async delete(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
 
-    console.log("id")
+    console.log(id)
 
-    const user = await Users.query()
-    console.log(user)
+    const client = await Client.query()
 
-    // res.status(200).json(user)
+    console.log(client)
+
+    // const user = await console.log(user)
+
+    return res.status(200).json({ message: "ok" })
   }
 }

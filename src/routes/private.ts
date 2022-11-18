@@ -1,6 +1,5 @@
 import * as express from "express"
 import { UsersController } from "@/controllers/users_controller"
-import { BadRequestError } from "@/helpers/api_errors"
 
 const routerPrivate = express.Router()
 const usersController = new UsersController()
