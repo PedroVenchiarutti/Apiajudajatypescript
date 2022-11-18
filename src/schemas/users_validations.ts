@@ -29,8 +29,8 @@ export const userSchema = z
       .string({
         required_error: "O campo data de nascimento é obrigatorio",
       })
-      .min(8)
-      .max(8),
+      .min(10)
+      .max(11),
     name: z.string({
       required_error: "Seu nome e obrigatorio",
     }),

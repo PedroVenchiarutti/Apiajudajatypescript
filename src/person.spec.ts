@@ -2,5 +2,5 @@ import Person from "@/person"
 
 it("should sum", () => {
   const person = new Person()
-  expect(person.sayHello()).toBe("Hello")
+  expect(person.sayHello()).toBe("Tiao")
 })
