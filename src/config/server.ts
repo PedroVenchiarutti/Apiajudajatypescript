@@ -1,11 +1,15 @@
 import "express-async-errors"
 import express from "express"
 import cors from "cors"
-import "dotenv/config"
 import swaggerDocument from "./swagger_output.json"
 import swaggerUi from "swagger-ui-express"
 import routes from "@/routes"
 import { errorMiddleware } from "@/middlewares/error"
+import dotenv from "dotenv"
+
+dotenv.config({
+  path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
+})
 
 const server = express()
 

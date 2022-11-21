@@ -9,10 +9,10 @@
     "start": "node dist/index.js",
     "start:dev": "nodemon --watch src/ --exec ts-node -r tsconfig-paths/register src/index.ts -e ts",
     "husky:prepare": "husky install",
-    "test": "jest --passWithNoTests",
-    "test:watch": "yarn test --watchAll",
-    "test:staged": "yarn test --findRelatedTests 'src/' ",
-    "test:push": "yarn test --coverage"
+    "test": "NODE_ENV=test jest --passWithNoTests --detectOpenHandles --forceExit",
+    "test:watch": "NODE_ENV=test yarn test --watchAll",
+    "test:staged": "NODE_ENV=test yarn test --findRelatedTests 'src/' ",
+    "test:push": "NODE_ENV=test yarn test --coverage"
   },
   "keywords": [],
   "author": "",

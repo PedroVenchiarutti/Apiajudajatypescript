@@ -1,68 +1,15 @@
-// import Users from "@/models/users"
-// import { Request, Response } from "express"
-
-// module.exports = function (server: any) {
-//   // GET - index
-//   server.get("/users", (req: Request, res: Response) => {
-//     Users.query()
-//       .then((users: any) => {
-//         res.json(users)
-//       })
-//       .catch((err: any) => console.log(err))
-//   })
-
-//   // GET BY ID - show
-//   server.get("/users/:id", (req: Request, res: Response) => {
-//     const { id } = req.params
-//     Users.query()
-//       .findById(id)
-//       .then((users: any) => {
-//         res.status(200).json(users)
-//       })
-//       .catch((err: any) => console.log(err))
-//   })
-
-//   // POST - create
-//   server.post("/users", (req: Request, res: Response) => {
-//     Users.query()
-//       .insert(req.body)
-//       .then((users: any) => {
-//         res.json(users)
-//       })
-//       .catch((err: any) => console.log(err))
-//   })
-
-//   // PUT - update
-//   server.put("/users/:id", (req: Request, res: Response) => {
-//     const { id } = req.params
-//     Users.query()
-//       .updateAndFetchById(id, req.body)
-//       .then((users: any) => {
-//         res.json(users)
-//       })
-//       .catch((err: any) => console.log(err))
-//   })
-
-//   // DELETE - destroy
-//   server.delete("/users/:id", (req: Request, res: Response) => {
-//     const { id } = req.params
-//     Users.query()
-//       .deleteById(id)
-//       .then((users: any) => {
-//         res.json(users)
-//       })
-//       .catch((err: any) => console.log(err))
-//   })
-// }
-import { NextFunction } from "express"
 import Users from "@/models/users"
-import Client from "@/models/clients"
 import { Request, Response } from "express"
 import { BcryptService } from "@/services/bcrypt"
 import { BadRequestError } from "@/helpers/api_errors"
 import { IUsers_controller } from "@/entities/users_controller"
 
-export class UsersController implements IUsers_controller {
+export class UserController extends BcryptService implements IUsers_controller {
+  constructor() {
+    super()
+    this.create = this.create.bind(this)
+  }
+
   // GET - All
   async get(req: Request, res: Response): Promise<Response> {
     const getAll = await Users.query().select("*")
@@ -125,8 +72,6 @@ export class UsersController implements IUsers_controller {
 
   // POST - create
   async create(req: Request, res: Response): Promise<Response> {
-    const crpyt = new BcryptService()
-
     const {
       birthday,
       emergencynumber,
@@ -140,7 +85,7 @@ export class UsersController implements IUsers_controller {
       username,
     } = req.body
 
-    const hash = await crpyt.hash(password)
+    const hash = await this.hash(password)
 
     // Verifica se o email ja existe no banco de dados
     const emailExists = await Users.query().where("email", email).first()
@@ -212,12 +157,18 @@ export class UsersController implements IUsers_controller {
 
     console.log(id)
 
-    const client = await Client.query()
+    // consultar o users_informations pelo id do user
+    const client = await Users.relatedQuery("users_informations")
+      .for(id)
+      .delete()
+
+    // deletar o user
+    const user = await Users.query().deleteById(id)
 
     console.log(client)
 
     // const user = await console.log(user)
 
-    return res.status(200).json({ message: "ok" })
+    return res.status(200).json({ message: "Usuario deletado com sucesso!" })
   }
 }

@@ -1,13 +1,13 @@
 import * as express from "express"
-import { UsersController } from "@/controllers/users_controller"
+import { UserController } from "@/controllers/user_controller"
 import { userSchema } from "@/schemas/users_validations"
 import bodyValidation from "@/middlewares/validation"
-
+import { LoginService } from "@/services/login"
 const routerPublic = express.Router()
 
-const usersController = new UsersController()
+const usersController = new UserController()
 
-routerPublic.post("/login")
+routerPublic.post("/login", new LoginService().login)
 
 // Rota para cadastro de usuario
 routerPublic.post(

@@ -7,7 +7,6 @@ export class BcryptService implements IBcrypt {
   async hash(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10)
     const hash = bcrypt.hashSync(password, salt)
-    console.log("Hash: ", hash)
     return hash
   }
 
