@@ -1,11 +1,13 @@
 import * as express from "express"
-import { UserController } from "@/controllers/user_controller"
+import UserController from "@/controllers/user_controller"
+import ClientController from "@/controllers/client_controller"
 import { userSchema } from "@/schemas/users_validations"
 import bodyValidation from "@/middlewares/validation"
 import { LoginService } from "@/services/login"
 const routerPublic = express.Router()
 
 const usersController = new UserController()
+const clientsController = new ClientController()
 
 routerPublic.post("/login", new LoginService().login)
 
@@ -20,7 +22,7 @@ routerPublic.post(
 routerPublic.post("/recovery")
 
 // Rotas para adicionar o a alergia no banco de dados
-routerPublic.post("/client/allergy/add")
+routerPublic.post("/client/allergy/add/:id", clientsController.addAllergy)
 
 // pegandos os dados do clients publicos so se tiver cadastrado alguma alergia
 routerPublic.get("/client/:id")

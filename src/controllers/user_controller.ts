@@ -4,7 +4,10 @@ import { BcryptService } from "@/services/bcrypt"
 import { BadRequestError } from "@/helpers/api_errors"
 import { IUsers_controller } from "@/entities/users_controller"
 
-export class UserController extends BcryptService implements IUsers_controller {
+export default class UserController
+  extends BcryptService
+  implements IUsers_controller
+{
   constructor() {
     super()
     this.create = this.create.bind(this)

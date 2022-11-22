@@ -1,5 +1,5 @@
 import * as express from "express"
-import { UserController } from "@/controllers/user_controller"
+import UserController from "@/controllers/user_controller"
 import ClientController from "@/controllers/client_controller"
 
 const routerPrivate = express.Router()
@@ -15,8 +15,9 @@ routerPrivate.patch("/update/users/password/:id")
 routerPrivate.delete("/delete/users/:id", userController.delete)
 
 // ROTAS DE  CLIENTES
-routerPrivate.get("/client/:id", userController.getByForeignKey)
+// routerPrivate.get("/client/:id", userController.getByForeignKey)
 routerPrivate.put("/client/update/:id", clientController.update)
+routerPrivate.get("/client/:id", clientController.getAlergy)
 
 // ROTAS DE CADASTRO DE ALERGIA
 routerPrivate.put("/client/allergy/update/:id")

@@ -1,5 +1,6 @@
 import { Model } from "objection"
 import knex from "@/database/connection"
+import IllAllergy from "@/models/ill_allergy"
 
 Model.knex(knex)
 
@@ -23,7 +24,18 @@ class Client extends Model {
   }
 
   // to make relation with other tables
-  // static get relationMappings() {}
+  static get relationMappings() {
+    return {
+      ill_allergy: {
+        relation: Model.HasOneRelation,
+        modelClass: IllAllergy,
+        join: {
+          from: "ill_allergy.info_id",
+          to: "users_informations.idinfo",
+        },
+      },
+    }
+  }
 }
 
 export default Client
