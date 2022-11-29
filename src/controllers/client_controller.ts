@@ -45,9 +45,9 @@ class ClientController {
     const { emergencynumber, helth_insurance } = req.body
     const { id } = req.params
 
-    // if (!emergencynumber || !helth_insurance) {
-    //   throw new BadRequestError("Campos inválidos")
-    // }
+    if (!emergencynumber || !helth_insurance) {
+      throw new BadRequestError("Campos inválidos")
+    }
 
     const data = {
       emergencynumber,
@@ -67,18 +67,21 @@ class ClientController {
     const { id } = req.params
     const { allergie, client_id } = req.body
 
-    const client = await illAllergy.query().where("info_id", id).first()
+    const client = await illAllergy
+      .query()
+      .where("info_id", id)
+      .first()
+      .catch((err) => console.log(err))
 
     if (!client) {
       throw new BadRequestError("Cliente não encontrado!")
     }
 
+    const objVerify = Object.keys(client.allergies).length
+
     // Validando se o campo esta vazio ou não
-    if (
-      client.allergies === null ||
-      client.allergies === undefined ||
-      typeof client.allergies === "object"
-    ) {
+    if (objVerify === 0) {
+      // Adicionando a alergia ao cliente
       const insertNewAllergy = await illAllergy
         .query()
         .update({
