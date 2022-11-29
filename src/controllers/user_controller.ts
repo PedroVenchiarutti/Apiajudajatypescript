@@ -1,8 +1,14 @@
 import Users from "@/models/users"
+import illAllergy from "@/models/ill_allergy"
 import { Request, Response } from "express"
 import { BcryptService } from "@/services/bcrypt"
 import { BadRequestError } from "@/helpers/api_errors"
 import { IUsers_controller } from "@/entities/users_controller"
+import Client from "@/models/clients"
+
+type UserClient = {
+  user_id: number
+}
 
 export default class UserController
   extends BcryptService
@@ -90,24 +96,24 @@ export default class UserController
 
     const hash = await this.hash(password)
 
-    // Verifica se o email ja existe no banco de dados
+    // // Verifica se o email ja existe no banco de dados
     const emailExists = await Users.query().where("email", email).first()
 
     if (emailExists) {
       throw new BadRequestError("Email já cadastrado")
     }
 
-    // Criando o usuario
+    // // Criando o usuario
     const user = await Users.query().insert({
       username,
       email,
       password: hash,
     })
 
-    // Pegando o id do usuario criado
+    // // Pegando o id do usuario criado
     const user_id = user.id
 
-    // Insere os dados do client no banco de dados e vincula com o user caso o user seja criado
+    // // Insere os dados do client no banco de dados e vincula com o user caso o user seja criado
     const client = await Users.relatedQuery("users_informations")
       .for(user_id)
       .insert({
@@ -120,12 +126,23 @@ export default class UserController
         avatar,
       })
       .returning("*")
-      .catch(async (err) => {
+      .catch(async () => {
         // Caso ocorra algum erro ao criar o client, o usuario criado é deletado
         await Users.query().deleteById(user_id)
-        console.log(err)
         throw new BadRequestError("Erro ao criar o usuário ")
       })
+
+    // console.log(client.idinfo)
+
+    // Criando um id na tabela de alergias
+    const alergies = await illAllergy
+      .query()
+      .insert({
+        info_id: client.id,
+        allergies: {},
+      })
+      .returning("*")
+      .catch((err) => console.log(err))
 
     return res.status(201).json({
       id: user.id,
@@ -134,6 +151,7 @@ export default class UserController
       created_at: user.created_at,
       updated_at: user.updated_at,
       users_informations: client,
+      ill_allergy: alergies,
     })
   }
 
@@ -158,19 +176,23 @@ export default class UserController
   async delete(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
 
-    console.log(id)
+    // Existe jeito melhor de fazer !
 
-    // consultar o users_informations pelo id do user
-    const client = await Users.relatedQuery("users_informations")
+    // Nao pode apagar a a tabela users_informations, pois ela esta vinculada com a tabela de alergias
+    const allergie = await Client.relatedQuery("ill_allergy")
       .for(id)
       .delete()
+      .returning("*")
 
-    // deletar o user
-    const user = await Users.query().deleteById(id)
+    const client = (await Client.query()
+      .deleteById(id)
+      .returning("*")) as unknown as UserClient
 
-    console.log(client)
+    const user = await Users.query().deleteById(client.user_id).returning("*")
 
-    // const user = await console.log(user)
+    if (!allergie || !client || !user) {
+      throw new BadRequestError("Erro ao deletar o usuário")
+    }
 
     return res.status(200).json({ message: "Usuario deletado com sucesso!" })
   }

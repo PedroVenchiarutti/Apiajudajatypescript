@@ -10,5 +10,7 @@ export const errorMiddleware = (
 ) => {
   const statusCode = error.statusCode ?? 500
   const message = error.statusCode ? error.message : "Internal Server Error"
+
+  console.log("Error no middleware", error)
   return res.status(statusCode).json({ message })
 }

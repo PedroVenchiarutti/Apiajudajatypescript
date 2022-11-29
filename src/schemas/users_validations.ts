@@ -25,12 +25,12 @@ export const userSchema = z
       })
       .min(6)
       .max(50),
-    birthday: z
-      .string({
-        required_error: "O campo data de nascimento é obrigatorio",
-      })
-      .min(10)
-      .max(11),
+    // birthday: z
+    //   .string({
+    //     required_error: "O campo data de nascimento é obrigatorio",
+    //   })
+    //   .min(8, "A data de nascimento deve ter no minimo 8 caracteres")
+    //   .max(9, "A data de nascimento deve ter no maximo 11 caracteres"),
     name: z.string({
       required_error: "Seu nome e obrigatorio",
     }),

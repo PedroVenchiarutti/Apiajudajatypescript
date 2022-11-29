@@ -22,7 +22,7 @@ class illAllergy extends Model {
         relation: Model.HasOneRelation,
         modelClass: Client,
         join: {
-          from: "users_informations.idinfo",
+          from: "users_informations.id",
           to: "ill_allergy.info_id",
         },
       },

@@ -4,15 +4,16 @@ import IllAllergy from "@/models/ill_allergy"
 
 Model.knex(knex)
 
-interface Client extends Model {
-  idinfo: number
-  user_id: number
+interface Client {
+  id: number
+  user_id: number | undefined
   name: string
   birthday: Date
   emergencynumber: string
   helth_insurance: string
   gender: string
   lastname: string
+  ill_allergy: IllAllergy
   avatar: string
   created_at: Date
   update_at: Date
@@ -31,7 +32,7 @@ class Client extends Model {
         modelClass: IllAllergy,
         join: {
           from: "ill_allergy.info_id",
-          to: "users_informations.idinfo",
+          to: "users_informations.id",
         },
       },
     }

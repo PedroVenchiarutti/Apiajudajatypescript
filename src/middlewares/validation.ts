@@ -10,7 +10,8 @@ const bodyValidation =
       const errorMessages = validation.error.issues.map(
         (issue: IssueData) => issue.message
       )
-      console.log(errorMessages)
+      console.log("Error no validation", errorMessages)
+      throw new BadRequestError(errorMessages)
     }
     next()
   }
