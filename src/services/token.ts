@@ -27,4 +27,15 @@ export class TokenService {
 
     return decoded
   }
+
+  verifyRefreshToken(refres_token: string): string | object {
+    const decoded = jwt.verify(
+      refres_token,
+      process.env.APP_SECRET_REFRESH_TOKEN as string
+    )
+
+    console.log(decoded)
+
+    return decoded
+  }
 }

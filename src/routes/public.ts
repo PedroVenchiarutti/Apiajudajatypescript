@@ -4,11 +4,13 @@ import ClientController from "@/controllers/client_controller"
 import { userSchema } from "@/schemas/users_validations"
 import bodyValidation from "@/middlewares/validation"
 import { LoginService } from "@/services/login"
+import RefreshTokenService from "@/services/refresh_token"
 const routerPublic = express.Router()
 
 const usersController = new UserController()
 const clientsController = new ClientController()
 const loginService = new LoginService()
+const refreshTokenService = new RefreshTokenService()
 
 routerPublic.post("/login", loginService.login)
 
@@ -21,6 +23,9 @@ routerPublic.post(
 
 // Gerar o token para o password quando esqueceu
 routerPublic.post("/recovery")
+
+// Refresh Token
+routerPublic.post("/refresh_token", refreshTokenService.add)
 
 // Rotas para adicionar o a alergia no banco de dados
 routerPublic.post("/client/allergy/add/:id", clientsController.addAllergy)
