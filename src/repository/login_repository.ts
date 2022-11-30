@@ -10,13 +10,15 @@ interface ILogin {
 }
 
 export class LoginRepository extends BcryptService {
+  token: TokenService
   constructor() {
     super()
     this.login = this.login.bind(this)
+    this.token = new TokenService()
   }
 
   async login({ email, password }: ILogin) {
-    const token = new TokenService()
+    // const token = new TokenService()
 
     // deixando todos email minusculo para evitar problemas
     email.toLowerCase()
@@ -36,7 +38,8 @@ export class LoginRepository extends BcryptService {
     }
 
     // Gerar o token
-    const accessToken = token.generateToken(user.id)
+    // const accessToken = token.generateToken(user.id)
+    const accessToken = this.token.generateToken(user.id)
 
     return {
       user: {

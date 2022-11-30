@@ -54,3 +54,33 @@ export const userSchema = z
       })
     }
   })
+
+export const newPassword = z
+  .object({
+    password: z
+      .string({
+        required_error: "Sua senha é obrigatória",
+      })
+      .min(6)
+      .max(50),
+    newPassword: z
+      .string({
+        required_error: "A nova senha é obrigatória",
+      })
+      .min(6)
+      .max(50),
+    confirmPassword: z
+      .string({
+        required_error: "O campo confirme senha é obrigatorio",
+      })
+      .min(6)
+      .max(50),
+  })
+  .superRefine(({ confirmPassword, newPassword }, ctx) => {
+    if (confirmPassword !== newPassword) {
+      ctx.addIssue({
+        code: "custom",
+        message: "O campo confirme senha precisa ser igual ao campo nova senha",
+      })
+    }
+  })

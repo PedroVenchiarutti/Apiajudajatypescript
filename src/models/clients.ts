@@ -6,7 +6,7 @@ Model.knex(knex)
 
 interface Client {
   id: number
-  user_id: number | undefined
+  user_id: number
   name: string
   birthday: Date
   emergencynumber: string

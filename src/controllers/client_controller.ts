@@ -77,6 +77,7 @@ class ClientController {
       throw new BadRequestError("Cliente não encontrado!")
     }
 
+    // Verificando se o cliente já possui alguma alergia cadastrada
     const objVerify = Object.keys(client.allergies).length
 
     // Validando se o campo esta vazio ou não

@@ -1,6 +1,8 @@
 import * as express from "express"
 import UserController from "@/controllers/user_controller"
 import ClientController from "@/controllers/client_controller"
+import bodyValidation from "@/middlewares/validation"
+import { newPassword } from "@/schemas/users_validations"
 
 const routerPrivate = express.Router()
 const userController = new UserController()
@@ -9,8 +11,11 @@ const clientController = new ClientController()
 // Rotas de usuarios
 routerPrivate.get("/users", userController.get)
 routerPrivate.get("/users/:id", userController.getById)
-routerPrivate.put("/update/users/:id")
-routerPrivate.patch("/update/users/password/:id")
+routerPrivate.patch(
+  "/update/users/password/:id",
+  bodyValidation(newPassword),
+  userController.updatePassword
+)
 
 routerPrivate.delete("/delete/users/:id", userController.delete)
 

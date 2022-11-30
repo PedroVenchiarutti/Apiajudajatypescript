@@ -6,8 +6,17 @@ import { BadRequestError } from "@/helpers/api_errors"
 import { IUsers_controller } from "@/entities/users_controller"
 import Client from "@/models/clients"
 
-type UserClient = {
+// Readonly - Não permite que o objeto seja alterado essa tecnica se chama mapped types
+// Partial - Permite que o objeto seja alterado
+// Tambem e possivel criar um tipo de objeto com mapped types
+interface IUserData {
+  password: string
   user_id: number
+}
+
+type StringFy<T> = {
+  // para cada Propriedade do objeto T, transforma em string
+  [P in keyof T]: string
 }
 
 export default class UserController
@@ -16,7 +25,9 @@ export default class UserController
 {
   constructor() {
     super()
+    // Definição do escopo do this para a classe e para os metodos, aqui ele defini que o this é a classe
     this.create = this.create.bind(this)
+    this.updatePassword = this.updatePassword.bind(this)
   }
 
   // GET - All
@@ -110,12 +121,9 @@ export default class UserController
       password: hash,
     })
 
-    // // Pegando o id do usuario criado
-    const user_id = user.id
-
     // // Insere os dados do client no banco de dados e vincula com o user caso o user seja criado
     const client = await Users.relatedQuery("users_informations")
-      .for(user_id)
+      .for(user.id)
       .insert({
         name,
         lastname,
@@ -128,7 +136,7 @@ export default class UserController
       .returning("*")
       .catch(async () => {
         // Caso ocorra algum erro ao criar o client, o usuario criado é deletado
-        await Users.query().deleteById(user_id)
+        await Users.query().deleteById(user.id)
         throw new BadRequestError("Erro ao criar o usuário ")
       })
 
@@ -155,21 +163,37 @@ export default class UserController
     })
   }
 
-  // PUT - update
-  async update(req: Request, res: Response): Promise<Response> {
-    const bcrypt = new BcryptService()
-
+  // PUT - update - Atualiza a senha do usuario
+  async updatePassword(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
 
-    const { password } = req.body
+    const { password, newPassword } = req.body
 
-    const hash = await bcrypt.hash(password)
+    const hash = await this.hash(newPassword)
 
-    const user = await Users.query().updateAndFetchById(id, {
-      password: hash,
+    // Mapped type
+    const verifyPassword = (await Users.query()
+      .findById(id)
+      .select("password")) as unknown as StringFy<IUserData>
+
+    // Comparando a senha atual com a senha do banco de dados
+    const verify = await this.compare(password, verifyPassword.password)
+
+    if (!verify) {
+      throw new BadRequestError("Senha atual incorreta!")
+    }
+
+    // Atualizando a senha
+    await Users.query()
+      .findById(id)
+      .patch({
+        password: hash,
+      })
+      .returning("*")
+
+    return res.status(200).json({
+      message: "Senha atualizada com sucesso",
     })
-
-    return res.status(200).json(user)
   }
 
   // DELETE - destroy - Deleta o usuario e o client
@@ -186,7 +210,7 @@ export default class UserController
 
     const client = (await Client.query()
       .deleteById(id)
-      .returning("*")) as unknown as UserClient
+      .returning("*")) as unknown as StringFy<IUserData>
 
     const user = await Users.query().deleteById(client.user_id).returning("*")
 

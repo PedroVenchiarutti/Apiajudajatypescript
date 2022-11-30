@@ -8,8 +8,9 @@ const routerPublic = express.Router()
 
 const usersController = new UserController()
 const clientsController = new ClientController()
+const loginService = new LoginService()
 
-routerPublic.post("/login", new LoginService().login)
+routerPublic.post("/login", loginService.login)
 
 // Rota para cadastro de usuario
 routerPublic.post(
