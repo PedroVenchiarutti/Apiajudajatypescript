@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
-
-export class TokenService {
+import ITokenService from "@/entities/token_service"
+export class TokenService implements ITokenService {
   generateToken(id: number | string, expiresIn = "30m"): string {
     const token = jwt.sign({ id }, process.env.TOKEN_SECRET as string, {
       expiresIn,
@@ -9,7 +9,7 @@ export class TokenService {
     return token
   }
 
-  generateRefreshToken(id: string, expiresIn: string): string {
+  generateRefreshToken(id: number, expiresIn: string): string {
     //...
     const refresh = jwt.sign(
       { id },
@@ -33,8 +33,6 @@ export class TokenService {
       refres_token,
       process.env.APP_SECRET_REFRESH_TOKEN as string
     )
-
-    console.log(decoded)
 
     return decoded
   }

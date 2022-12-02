@@ -1,8 +1,11 @@
 import express from "express"
 import routerPrivate from "@/routes/private"
 import routerPublic from "@/routes/public"
+import Token_Validation from "@/middlewares/token_validation"
 
 const router = express.Router()
+
+const tokenValidation = new Token_Validation()
 
 // Recovery password quando esqueceu
 router.post("/recovery/password")
@@ -23,6 +26,6 @@ router.post("/private/delete/msg")
 router.use("/public", routerPublic)
 
 // Rotas privadas
-router.use("/private", routerPrivate)
+router.use("/private", tokenValidation.validate, routerPrivate)
 
 export default router

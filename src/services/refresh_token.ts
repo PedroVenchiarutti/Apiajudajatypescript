@@ -12,9 +12,11 @@ class RefreshTokenService extends RefreshTokenRepository {
 
     const { refresh_token } = req.body
 
-    this.execute(refresh_token)
+    const { refresh, token } = await this.execute(refresh_token)
 
-    return res.status(200).json({ message: "Refresh Token adicionado" })
+    return res
+      .status(200)
+      .json({ message: "Refresh Token adicionado", token, refresh })
   }
 }
 

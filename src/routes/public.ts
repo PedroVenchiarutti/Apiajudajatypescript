@@ -12,7 +12,7 @@ const clientsController = new ClientController()
 const loginService = new LoginService()
 const refreshTokenService = new RefreshTokenService()
 
-routerPublic.post("/login", loginService.login)
+routerPublic.post("/login", loginService.newlogin)
 
 // Rota para cadastro de usuario
 routerPublic.post(
@@ -22,7 +22,7 @@ routerPublic.post(
 )
 
 // Gerar o token para o password quando esqueceu
-routerPublic.post("/recovery")
+routerPublic.post("/recovery", usersController.recoverPassword)
 
 // Refresh Token
 routerPublic.post("/refresh_token", refreshTokenService.add)

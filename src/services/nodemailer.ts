@@ -1,0 +1,46 @@
+import nodemailer from "nodemailer"
+import { Transporter } from "nodemailer"
+
+class Mail {
+  constructor(
+    public to: string,
+    public subject: string,
+    public message: string
+  ) {}
+
+  async sendEmail() {
+    // Configurando o servidor de email
+    const mailOptions = {
+      from: '"Fred Foo 👻" <pedro.lucas.clear@gmail.com>', // sender address
+      to: this.to, // para onde quer envia pode ser um arry ou uma string
+      subject: this.subject, // assunto
+      text: this.message, // texto
+    }
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT as unknown as number,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    }) as Transporter
+
+    // Envio de email para o usuario
+    const tpp = transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error)
+      } else {
+        console.log("Email enviado: " + info)
+      }
+    })
+    console.log(tpp)
+    // return mailOptions
+  }
+}
+
+export default Mail
