@@ -65,7 +65,7 @@ class ClientController {
   // Adicionando alergia ao cliente
   async addAllergy(req: Request, res: Response): Promise<Response> {
     const { id } = req.params
-    const { allergie, client_id } = req.body
+    const { allergie } = req.body
 
     const client = await illAllergy
       .query()
@@ -87,12 +87,13 @@ class ClientController {
         .query()
         .update({
           allergies: {
-            all: allergie,
+            all: [allergie],
           },
         })
         .where("info_id", id)
         .returning("*")
         .first()
+
       const { info_id, allergies }: any = insertNewAllergy
 
       return res.status(201).json({
@@ -103,19 +104,22 @@ class ClientController {
     }
 
     // Se nao estiver vazio acresenta a nova alergia
-    const newData = client?.allergies.all.concat(allergie)
-    const insertNewAllergy = await illAllergy
+    const { all } = client.allergies
+    all.push(allergie)
+    // const newAll = [...all, allergie]
+
+    await illAllergy
       .query()
       .update({
         allergies: {
-          all: newData,
+          all,
         },
       })
       .where("info_id", id)
       .returning("*")
       .first()
 
-    const { info_id, allergies }: any = insertNewAllergy
+    const { info_id, allergies }: any = client
 
     return res.status(201).json({
       message: "Alergia adicionada com sucesso!",

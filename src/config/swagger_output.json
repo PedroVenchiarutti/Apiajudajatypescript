@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "swagger": "2.0",
   "info": {
     "title": "AjudaJA API",
     "version": "1.0.0",
@@ -9,386 +9,308 @@
       "email": "pedro.lucas.clear@gmail.com"
     }
   },
-  "servers": [
-    {
-      "url": "http://localhost:3333/v1/"
-    }
-  ],
+  "host": "localhost:3333/v1",
+  "basePath": "/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
   "paths": {
-    "/private/recovery": {
-      "post": {
-        "tags": ["Private / Client"],
-        "description": "",
+    "/private/users": {
+      "get": {
+        "tags": ["Users"],
+        "description": "Endpoint para listar todos os usuários",
         "parameters": [
           {
-            "name": "authorization",
+            "name": "Authorization",
             "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
             "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/private/users/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "description": "Endpoint para listar um usuário",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do usuário"
           },
           {
-            "name": "obj",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/private/update/users/password/{id}": {
+      "patch": {
+        "tags": ["Users"],
+        "description": "Endpoint para atualizar a senha do usuário",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "password",
             "in": "body",
-            "description": "Informações do para troca de senha",
+            "description": "Sua senha atual",
             "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "password": {
                   "type": "string",
-                  "example": "123456"
+                  "example": "password"
                 },
-                "passwordConfirmation": {
+                "newPassword": {
                   "type": "string",
-                  "example": "123456"
+                  "example": "newPassword"
+                },
+                "confirmPassword": {
+                  "type": "string",
+                  "example": "confirmPassword"
                 }
               },
-              "required": ["password", "passwordConfirmation"]
+              "required": ["password", "newPassword", "confirmPassword"]
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
           {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/public/recovery": {
-      "post": {
-        "tags": ["Public"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/public/refresh-token": {
-      "post": {
-        "tags": ["Public / Refresh Token"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "refreshToken": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/msgIA": {
-      "post": {
-        "tags": ["Private / IA"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
+            "name": "Authorization",
             "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
             "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/private/delete/users/{id}": {
+      "delete": {
+        "tags": ["Users"],
+        "description": "Endpoint para deletar um usuário",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do usuário"
           },
           {
-            "name": "body",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {},
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/private/client/update/{id}": {
+      "put": {
+        "tags": ["Clients"],
+        "description": "Endpoint para atualizar um cliente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do cliente"
+          },
+          {
+            "name": "client",
             "in": "body",
+            "description": "Dados do cliente",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "text": {
-                  "example": "any"
+                "emergencynumber": {
+                  "type": "string",
+                  "example": "numero de emergencia"
                 },
-                "intent": {
-                  "example": "any"
+                "helth_insurance": {
+                  "type": "string",
+                  "example": "plano de saude"
                 }
-              }
+              },
+              "required": ["emergencynumber", "helth_insurance"]
             }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
+        "responses": {},
         "security": [
           {
-            "bearerAuth": []
+            "Bearer": []
           }
         ]
       }
     },
-    "/private/respIA": {
-      "post": {
-        "tags": ["Private / IA"],
-        "description": "",
+    "/private/client/{id}": {
+      "get": {
+        "tags": ["Clients"],
+        "description": "Endpoint para listar as alergias de um cliente",
         "parameters": [
           {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do cliente"
           },
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "text": {
-                  "example": "any"
-                },
-                "intent": {
-                  "example": "any"
-                }
-              }
-            }
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
+        "responses": {},
         "security": [
           {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/getCollection": {
-      "post": {
-        "tags": ["Private / IA"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "collection": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/delete/msg": {
-      "post": {
-        "tags": ["Private / IA"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": "any"
-                },
-                "collection": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
+            "Bearer": []
           }
         ]
       }
     },
     "/public/login": {
       "post": {
-        "tags": ["Public"],
-        "description": "",
+        "tags": ["Login"],
+        "description": "Endpoint para realizar o login",
         "parameters": [
           {
-            "name": "body",
+            "name": "login",
             "in": "body",
+            "description": "Email do usuário e senha",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "email"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "password"
                 }
-              }
+              },
+              "required": ["email", "password"]
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       }
     },
     "/public/register": {
       "post": {
-        "tags": ["Public"],
-        "description": "",
+        "tags": ["Register"],
+        "description": "Endpoint para realizar o cadastro de usuário",
         "parameters": [
           {
-            "name": "obj",
+            "name": "register",
             "in": "body",
-            "description": "Informações do usuario",
+            "description": "Dados do usuário",
             "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "username": {
                   "type": "string",
-                  "example": "Pedro"
+                  "example": "username"
                 },
                 "email": {
                   "type": "string",
-                  "example": "teste@teste.com"
+                  "example": "email"
                 },
                 "password": {
                   "type": "string",
-                  "example": "123456"
+                  "example": "password"
                 },
-                "passwordConfirmation": {
+                "confirmPassword": {
                   "type": "string",
-                  "example": "123456"
+                  "example": "confirmPassword"
                 },
                 "birthday": {
                   "type": "string",
-                  "example": "DD-MM-YYYY"
+                  "example": "06-06-1996"
                 },
                 "emergencynumber": {
                   "type": "string",
-                  "example": "11999999999"
+                  "example": "numero de emergencia"
                 },
                 "helth_insurance": {
                   "type": "string",
-                  "example": "Nao"
+                  "example": "plano de saude"
                 },
                 "gender": {
                   "type": "string",
-                  "example": "M"
+                  "example": "genero M ou F"
                 },
                 "name": {
                   "type": "string",
-                  "example": "Pedro"
+                  "example": "nome"
                 },
                 "lastname": {
                   "type": "string",
-                  "example": "Lucas"
+                  "example": "sobrenome"
                 },
                 "avatar": {
                   "type": "string",
-                  "example": "urlImg"
+                  "example": "Url da imagem"
                 }
               },
               "required": [
                 "username",
                 "email",
                 "password",
-                "passwordConfirmation",
+                "confirmPassword",
                 "birthday",
                 "emergencynumber",
                 "helth_insurance",
@@ -400,458 +322,135 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
+        "responses": {}
       }
     },
-    "/public/client/allergy/add": {
+    "/public/recovery/generate": {
       "post": {
-        "tags": ["Public / Client"],
-        "description": "",
+        "tags": ["Recovery"],
+        "description": "Endpoint para gerar o token de recuperação de senha",
         "parameters": [
           {
-            "name": "obj",
+            "name": "email",
             "in": "body",
-            "description": "Objeto com os dados da alergia",
+            "description": "Email do usuário",
             "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "info_id": {
+                "email": {
                   "type": "string",
-                  "example": "35"
-                },
-                "name_illness": {
-                  "type": "string",
-                  "example": "Alergia"
-                },
-                "description": {
-                  "type": "string",
-                  "example": "Alergia a poeira"
+                  "example": "email"
                 }
               },
-              "required": ["info_id", "name_illness", "description"]
+              "required": ["email"]
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        "responses": {}
       }
     },
-    "/public/client/{id}": {
-      "get": {
-        "tags": ["Public / Client"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/public/webchat/{id}": {
+    "/public/recovery/password/{token}": {
       "post": {
-        "tags": ["Public / WebChat"],
-        "description": "",
+        "tags": ["Recovery"],
+        "description": "Endpoint para recuperar a senha",
         "parameters": [
           {
-            "name": "id",
+            "name": "token",
             "in": "path",
             "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {},
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/users": {
-      "get": {
-        "tags": ["Private / User"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/users/{id}": {
-      "get": {
-        "tags": ["Private / User"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Token de recuperação de senha"
           },
           {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/update/users/{id}": {
-      "put": {
-        "tags": ["Private / User"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
+            "name": "password",
             "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/update/users/password/{id}": {
-      "patch": {
-        "tags": ["Private / User"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
+            "description": "Nova senha",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
               "type": "object",
               "properties": {
                 "password": {
-                  "example": "any"
-                },
-                "newPassword": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/delete/users/{id}": {
-      "delete": {
-        "tags": ["Private / User"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/client/{id}": {
-      "get": {
-        "tags": ["Private / Client"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/client/update/{id}": {
-      "put": {
-        "tags": ["Private / Client"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "emergencynumber": {
-                  "example": "any"
-                },
-                "helth_insurance": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/private/client/allergy/update/{id}": {
-      "put": {
-        "tags": ["Private / Client"],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "Objeto com os dados da alergia",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name_illness": {
                   "type": "string",
-                  "example": "Alergia"
+                  "example": "password"
                 },
-                "description": {
+                "confirmPassword": {
                   "type": "string",
-                  "example": "Alergia a pelvis"
+                  "example": "confirmPassword"
                 }
               },
-              "required": ["name_illness", "description"]
+              "required": ["password", "confirmPassword"]
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        "responses": {}
       }
     },
-    "/private/client/allergy/delete/{id}": {
-      "delete": {
-        "tags": ["Private / Client"],
-        "description": "",
+    "/public/refresh_token": {
+      "post": {
+        "tags": ["Refresh Token"],
+        "description": "Endpoint para gerar um novo token de acesso",
+        "parameters": [
+          {
+            "name": "refresh_token",
+            "in": "body",
+            "description": "Refresh Token",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "refresh_token": {
+                  "type": "string",
+                  "example": "refresh_token"
+                }
+              },
+              "required": ["refresh_token"]
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/public/client/allergy/add/{id}": {
+      "post": {
+        "tags": ["Client"],
+        "description": "Endpoint para adicionar uma alergia ao cliente",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID do cliente"
           },
           {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
+            "name": "allergy",
+            "in": "body",
+            "description": "Alergia",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "allergie": {
+                  "type": "string",
+                  "example": "allergy"
+                }
+              },
+              "required": ["allergie"]
+            }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        "responses": {}
       }
     }
   },
-  "securytiDefinitions": {
-    "bearerAuth": {
-      "type": "http",
-      "scheme": "bearer",
-      "bearerFormat": "JWT"
+  "componets": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   }
 }

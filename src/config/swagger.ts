@@ -6,11 +6,14 @@ const endpointsFiles = [
   "./src/routes/index.ts",
   "./src/routes/private.ts",
   "./src/routes/public.ts",
-  "./src/controllers/users_controller.ts",
 ]
 
 const options = {
-  openapi: "3.0.0",
+  autoBody: true,
+  autoQuery: true,
+  autoHeaders: true,
+  autoParams: true,
+  autoResponse: true,
 }
 
 const doc = {
@@ -26,11 +29,13 @@ const doc = {
   host: "localhost:3333/v1",
   schemes: ["http"],
   consumes: ["application/json"],
-  securytiDefinitions: {
-    bearerAuth: {
-      type: "http",
-      scheme: "bearer",
-      bearerFormat: "JWT",
+  componets: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
     },
   },
 }

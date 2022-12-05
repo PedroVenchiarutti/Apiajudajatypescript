@@ -6,22 +6,31 @@ import swaggerUi from "swagger-ui-express"
 import routes from "@/routes"
 import { errorMiddleware } from "@/middlewares/error"
 import dotenv from "dotenv"
+import { Server } from "socket.io"
+
+const app = express()
+const server = require("http").createServer(app)
 
 dotenv.config({
   path: process.env.NODE_ENV === "test" ? ".env.test" : ".env",
 })
 
-const server = express()
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+})
 
 // Initial settings
-server.use(cors())
-server.use(express.json())
-server.use(express.urlencoded({ extended: false }))
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 
 //EndPoints
-server.use("/v1", routes)
-server.use("/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use("/v1", routes)
+app.use("/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // Middlewware de erro sempre usar por ultimo de tudo
-server.use(errorMiddleware)
-export default server
+app.use(errorMiddleware)
+export { server, io }
