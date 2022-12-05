@@ -6,5 +6,4 @@ export interface IUsers_controller {
   updatePassword: (req: Request, res: Response) => Promise<Response>
   delete: (req: Request, res: Response) => Promise<Response>
   getByForeignKey: (req: Request, res: Response) => Promise<Response>
-  recoverPassword: (req: Request, res: Response) => Promise<Response>
 }

@@ -4,7 +4,7 @@ import { Request, Response } from "express"
 import { BcryptService } from "@/services/bcrypt"
 import { BadRequestError } from "@/helpers/api_errors"
 import { IUsers_controller } from "@/entities/users_controller"
-import Mail from "@/services/nodemailer"
+
 import Client from "@/models/clients"
 
 // Readonly - Não permite que o objeto seja alterado essa tecnica se chama mapped types
@@ -220,44 +220,6 @@ export default class UserController
     }
 
     return res.status(200).json({ message: "Usuario deletado com sucesso!" })
-  }
-
-  async recoverPassword(req: Request, res: Response): Promise<Response> {
-    // querys
-    //   .verifyEmail("users", email)
-    //   .then(async (result) => {
-    //     if (result.length > 0) {
-    //       const newToken = await token.generateToken(result[0].id, "3m");
-    //       rum(
-    //         "guilherme.carvalho.clear@gmail.com",
-    //         "Recuperação de senha",
-    //         `Para recuperar sua senha utilize esse clique nesse link:http://localhost:5173/newpassword?token=${newToken}`
-    //       );
-    //       res.status(200).json({
-    //         message: "Email enviado com sucesso. Aguarde alguns minutos! ",
-    //         token: newToken,
-    //       });
-    //     } else {
-    //       res.status(400).json({
-    //         message: "Email nao cadastrado! ",
-    //       });
-    //     }
-    //   })
-
-    // Verifica se o email existe no banco de dados
-    const { email } = req.body
-
-    const instanceEmail = new Mail(
-      email,
-      "Recuperação de senha",
-      "Tiao seu retardado do carai"
-    )
-
-    const result = await instanceEmail.sendEmail()
-
-    console.log(result)
-
-    return res.status(200).json(result)
   }
 
   // const emailExists = await Users.query().where("email", email).first()

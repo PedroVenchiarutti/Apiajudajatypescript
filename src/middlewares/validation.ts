@@ -10,7 +10,9 @@ const bodyValidation =
       const errorMessages = validation.error.issues.map(
         (issue: IssueData) => issue.message
       )
-      throw new BadRequestError(errorMessages)
+      errorMessages.map((message: string) => {
+        throw new BadRequestError(message)
+      })
     }
     next()
   }

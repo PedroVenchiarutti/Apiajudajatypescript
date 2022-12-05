@@ -84,3 +84,27 @@ export const newPassword = z
       })
     }
   })
+
+export const recoverPassword = z
+  .object({
+    password: z
+      .string({
+        required_error: "Sua senha é obrigatória",
+      })
+      .min(6, { message: "A senha deve ter no minimo 6 caracteres" })
+      .max(50),
+    confirmPassword: z
+      .string({
+        required_error: "O campo confirme senha é obrigatorio",
+      })
+      .min(6, { message: "A senha deve ter no minimo 6 caracteres" })
+      .max(50),
+  })
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        code: "custom",
+        message: "O campo confirme senha precisa ser igual ao campo nova senha",
+      })
+    }
+  })

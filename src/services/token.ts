@@ -1,5 +1,13 @@
 import jwt from "jsonwebtoken"
 import ITokenService from "@/entities/token_service"
+
+interface IToken {
+  id?: number
+  email: string
+  iat: number
+  exp: number
+}
+
 export class TokenService implements ITokenService {
   generateToken(id: number | string, expiresIn = "30m"): string {
     const token = jwt.sign({ id }, process.env.TOKEN_SECRET as string, {
@@ -35,5 +43,26 @@ export class TokenService implements ITokenService {
     )
 
     return decoded
+  }
+
+  recoveryPasswordToken(email: string, expiresIn: string): string {
+    const token = jwt.sign(
+      { email },
+      process.env.TOKEN_SECRET_RECOVERY as string,
+      {
+        expiresIn,
+      }
+    )
+
+    return token
+  }
+
+  verifyRecoveryPasswordToken(token: string) {
+    const decoded = jwt.verify(
+      token,
+      process.env.TOKEN_SECRET_RECOVERY as string
+    )
+
+    return decoded as IToken
   }
 }
