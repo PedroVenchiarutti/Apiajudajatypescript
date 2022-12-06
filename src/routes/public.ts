@@ -7,6 +7,7 @@ import { LoginService } from "@/services/login"
 import RefreshTokenService from "@/services/refresh_token"
 import RecoveryPassword from "@/services/recovery_password"
 import { recoverPassword } from "@/schemas/users_validations"
+import ChatBoxService from "@/services/chatbox_service"
 
 const routerPublic = express.Router()
 
@@ -15,6 +16,7 @@ const clientsController = new ClientController()
 const loginService = new LoginService()
 const refreshTokenService = new RefreshTokenService()
 const recoveryPassword = new RecoveryPassword()
+const chatBoxService = new ChatBoxService()
 
 // Cadastro de msg IA
 // Cadastrando a msg para o bot
@@ -179,6 +181,6 @@ routerPublic.post(
 routerPublic.get("/client/:id")
 
 // Crashando a aplicacao resolver
-routerPublic.post("/webchat/:id")
+routerPublic.post("/webchat/:id", chatBoxService.getMessageClient)
 
 export default routerPublic

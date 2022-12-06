@@ -1,10 +1,10 @@
 import { io } from "@/config/server"
 import firebaseApp from "@/database/firebaseConnection"
+import { dateFormat } from "@/helpers/date"
 import ChatBoxRepository from "@/repository/chatbox_repository"
+import { Request, Response } from "express"
 // tive que importa com require porque nao existe modulos para typescript
 const { NlpManager } = require("node-nlp")
-
-const manager = new NlpManager({ languages: ["pt"], forcptER: true })
 
 export default class ChatBoxService extends ChatBoxRepository {
   constructor() {
@@ -14,130 +14,24 @@ export default class ChatBoxService extends ChatBoxRepository {
   async initBot() {
     console.log("Iniciando o bot no service")
   }
+
+  // Salvando a sala do cliente no banco de dados
+  async getMessageClient(req: Request, res: Response) {
+    const section = req.params.id
+    console.log("service get", section)
+
+    const date = dateFormat(new Date()).replace(/\//g, "_")
+
+    const dataNew: string[] = []
+
+    const msgClient = firebaseApp.database().ref(section).child(date)
+
+    const snapshot = await msgClient.on("value", (snapshot) => {
+      snapshot?.forEach((childSnapshot) => {
+        const data = childSnapshot.val()
+        dataNew.push(data)
+      })
+      return res.status(200).json(dataNew)
+    })
+  }
 }
-
-// const dayReplace = dayFormat(new Date()).replace(/\//g, "_")
-
-// Pegando resposta do banco de dados
-// async function getSpecifyMessage() {
-//   try {
-//     const snapshot = await messageBot.get()
-//     const data = snapshot.docs.map((doc) => {
-//       let msg = doc.data().text
-//       let intent = doc.data().intent
-//       manager.addAnswer("pt", intent, msg)
-//     })
-//     return data
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
-
-// Treine e salve o modelo.
-// async function startBot(data) {
-//   if (data.message === " ") return
-//   if (data.initial) return
-//   await manager.train()
-//   manager.save()
-
-//   const notFoundMessage = "Desculpe, não entendi o que você quis dizer."
-
-//   try {
-//     const response = await manager.process("pt", data.message.toLowerCase())
-//     console.log(response)
-//     // se o bot nao encontrar a mensagem ele retorna a mensagem de not
-//     if (response.answer == null) {
-//       await firebaseApp
-//         .database()
-//         .ref(data.room)
-//         .child(dayReplace)
-//         .push({
-//           message: notFoundMessage,
-//           room: data.room,
-//           user: "bot",
-//           username: "bot",
-//           createdAt: timeFormat(new Date()),
-//           date: dayFormat(new Date()),
-//         })
-
-//       io.emit("message_bot", {
-//         user: "bot",
-//         message: notFoundMessage,
-//         createdAt: timeFormat(new Date()),
-//         date: dayFormat(new Date()),
-//       })
-//     } else {
-//       await firebaseApp
-//         .database()
-//         .ref(data.room)
-//         .child(dayReplace)
-//         .push({
-//           message: response.answer,
-//           room: data.room,
-//           user: "bot",
-//           username: "bot",
-//           createdAt: timeFormat(new Date()),
-//           date: dayFormat(new Date()),
-//         })
-
-//       io.emit("message_bot", {
-//         user: "bot",
-//         message: response.answer,
-//         time: timeFormat(new Date()),
-//       })
-//       return
-//     }
-//   } catch (error) {
-//     console.log(error.message)
-//   }
-// }
-
-// Adicioanndo a mensagem do usuario no banco de dados
-// function addMsgClient(collection, data) {
-//   firebaseApp
-//     .database()
-//     .ref(data.room)
-//     .child(dayReplace)
-//     .push({
-//       message: data.message,
-//       room: data.room,
-//       user: data.user,
-//       username: data.username,
-//       createdAt: timeFormat(new Date()),
-//       date: dayFormat(new Date()),
-//     })
-//     .then(() => {
-//       return startBot(data)
-//     })
-//     .catch((error) => {
-//       console.log(error.message)
-//     })
-// }
-
-// io.on("connection", (socket) => {
-//   getSpecifyMessage()
-//   getMessageIA()
-
-//   socket.on("message", (data) => {
-//     const msgClient = {
-//       message: data.message,
-//       room: data.room,
-//       user: data.user,
-//       username: data.username,
-//       time: timeFormat(new Date()),
-//       date: dayFormat(new Date()),
-//     }
-//     socket.emit("message_new", msgClient)
-
-//     if (data.message === "sair") {
-//       socket.emit("message_new", {
-//         user: "bot",
-//         message: "Até mais, espero ter ajudado",
-//         time: timeFormat(new Date()),
-//       })
-//       socket.disconnect()
-//       return
-//     }
-//     addMsgClient(data.room, data)
-//   })
-// })

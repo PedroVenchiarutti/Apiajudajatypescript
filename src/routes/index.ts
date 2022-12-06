@@ -7,9 +7,12 @@ import ChatBoxService from "@/services/chatbox_service"
 const router = express.Router()
 const tokenValidation = new Token_Validation()
 
-router.post("/testbot", (req, res) => {
-  const chatBoxService = new ChatBoxService()
-  res.status(200).json({ message: "ok" })
+router.post("/testbot", async (req, res) => {
+  const chatBoxService = await new ChatBoxService().startBot(req.body)
+
+  const { answer } = chatBoxService
+
+  res.status(200).json({ message: answer })
 })
 
 // Rotas publicas
